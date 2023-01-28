@@ -5,6 +5,15 @@ function list() {
     return knex("movies").select("movie_id", "title", "runtime_in_minutes", "rating", "description", "image_url");
 }
 
+function listShowingMovies () {
+    return knex("movies as m")
+        .join("movies_theaters as mt", "m.movie_id", "mt.movie_id")
+        .select("m.movie_id", "m.title", "m.runtime_in_minutes", "m.rating", "m.description", "m.image_url")
+        .where({ "mt.is_showing": true })
+        .groupBy("m.movie_id");
+}
+
 module.exports = {
     list,
+    listShowingMovies,
 };
