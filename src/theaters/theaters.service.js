@@ -1,6 +1,6 @@
 const knex = require("../db/connection");//knex instance
 
-function list() {
+function listForMovies() {
     return knex("theaters as t")
         .join("movies_theaters as mt", "t.theater_id", "mt.theater_id")
         .select("t.*", "mt.movie_id")
@@ -8,5 +8,5 @@ function list() {
 }
 
 module.exports = {
-    list,
+    listForMovies,
 }
