@@ -17,6 +17,36 @@ async function list(req, res, next) {
     }  
 }//error: reviews.filter is not a function, something is not working correctly in the service and/or controller
 
+async function reviewExists(req, res, next) {
+    const review = await reviewsService.read(req.params.reviewId);
+    if (review) {
+        res.locals.review = review;
+        return next();
+    }
+    next({ status: 404, message: "Review cannot be found."});
+}
+
+async function update(req, res, next) {
+    try {
+        const newReview = { ...req.body.data, review_id: res.locals.review.review_id };
+        const updatedReview = await reviewsService.update(newReview);
+        const review = await reviewsService.read(res.locals.review.review_id);
+        const criticObj = await reviewsService.getCritic(res.locals.review.critic_id);
+        review["critic"] = criticObj.critic;
+        res.json({ data: review });
+    } catch(error) {
+        console.log(error);
+        next(error);
+    }
+}
+
+async function destroy(req, res) {
+    await reviewsService.destroy(res.locals.review.review_id);
+    res.sendStatus(204);
+}
+
 module.exports = {
     list: asyncErrorBoundary(list),
+    update: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(update)],
+    delete: [asyncErrorBoundary(reviewExists), asyncErrorBoundary(destroy)],
 }

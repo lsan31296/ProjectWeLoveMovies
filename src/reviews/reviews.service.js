@@ -22,8 +22,23 @@ function getCritic(criticId) {
     return knex("critics").select("*").where({ critic_id: criticId}).first().then(addCritic);
 }
 
+function update(updatedReview) {
+    return knex("reviews").select("*").where({ review_id: updatedReview.review_id }).update(updatedReview);
+}
+
+function read(reviewId) {
+    return knex ("reviews").select("*").where({ review_id: reviewId }).first();
+}
+
+function destroy(reviewId) {
+    return knex("reviews").select("*").where({ review_id: reviewId }).del();
+}
+
 module.exports = {
     list,
     getCritic,
     listReviewsForMovie,
+    update,
+    read,
+    destroy
 }
