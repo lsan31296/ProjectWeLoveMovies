@@ -19,6 +19,7 @@
     "test": "jest",
     "test:solution": "docker-compose build && docker-compose run --rm api npm test && docker-compose down",
     "pg:start:service": "sudo service postgresql start",
+    "pg:stop:service": "sudo service postgresql stop",
     "pg:start:instance": "sudo -u postgres psql",
     "pg:status:service": "sudo service postgresql status"
   },
